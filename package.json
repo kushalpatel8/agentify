@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@arcjet/inspect": "^1.5.0",
+    "@arcjet/next": "^1.5.0",
     "@base-ui/react": "^1.7.0",
     "@clerk/nextjs": "^7.7.8",
     "@shadcn/react": "^0.3.0",
