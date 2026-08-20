@@ -8,5 +8,16 @@ export default defineSchema({
         imageUrl:v.optional(v.string()),
         subscription:v.optional(v.string()),
         token:v.number(),
-    })
+    }),
+
+    AgentTable: defineTable({
+        agentId: v.string(),
+        name: v.string(),
+        userId: v.id("UserTable"),
+        publish: v.optional(v.boolean()),
+        config: v.optional(v.any()),
+        nodes: v.optional(v.any()),
+        edges: v.optional(v.any()),
+        agentToolConfig: v.optional(v.any()),
+    }),
 })
