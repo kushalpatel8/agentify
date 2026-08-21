@@ -44,7 +44,7 @@ export const AgentTools = [
         icon: ThumbsUp,
         bgColor: "#EADCFF", // Light lavender
         id: "approval",
-        type: "ApprovalNode",
+        type: "UserApprovalNode",
     },
     {
         name: "API",
@@ -75,7 +75,7 @@ function AgentToolsPanel() {
             <div>
                 {AgentTools.map((tool, index) =>(
                     <div key={index} className='flex items-center gap-3 p-2 cursor-pointer
-                     hover:bg-gray-100 rounded-xl' onClick={()=>onAgentToolClick}>
+                     hover:bg-gray-100 rounded-xl' onClick={()=>onAgentToolClick(tool)}>
                         <tool.icon className='p-2 rounded-lg h-8 w-8'
                         style={{
                             backgroundColor: tool.bgColor

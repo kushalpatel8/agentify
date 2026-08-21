@@ -19,12 +19,14 @@ import {
   OnEdgesChange,
   OnConnect,
   OnSelectionChangeParams,
+  useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
 import { useConvex, useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { toast } from 'sonner';
+import { Trash2 } from 'lucide-react';
 
 import Header from '../_components/Header';
 import AgentToolsPanel from '../_components/AgentToolsPanel';
@@ -45,13 +47,13 @@ import { Button } from '@/components/ui/button';
 
 // Exported nodeTypes mapping so the Preview page can reuse the exact registry
 export const nodeTypes = {
-  startNode: StartNode,
-  agentNode: AgentNode,
-  endNode: EndNode,
-  ifElseNode: IfElseNode,
-  whileNode: WhileNode,
-  userApprovalNode: UserApprovalNode,
-  apiNode: ApiNode,
+  StartNode: StartNode,
+  AgentNode: AgentNode,
+  EndNode: EndNode,
+  IfElseNode: IfElseNode,
+  WhileNode: WhileNode,
+  UserApprovalNode: UserApprovalNode,
+  ApiNode: ApiNode,
 };
 
 function AgentBuilder() {
@@ -61,6 +63,16 @@ function AgentBuilder() {
   const [agentDetail, setAgentDetail] = useState<Agent>();
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
+  const { deleteElements } = useReactFlow();
+  const [selectedElements, setSelectedElements] = useState<{nodes: Node[], edges: Edge[]}>({nodes: [], edges: []});
+
+
+  const handleDeleteSelected = () => {
+    if (selectedElements.nodes.length > 0 || selectedElements.edges.length > 0) {
+      deleteElements(selectedElements);
+      setSelectedNode(null); // Clear selected node in context
+    }
+  };
 
   // Workflow Context
   const {
@@ -151,14 +163,16 @@ function AgentBuilder() {
 
   // 7. Handle Node selection (opens dynamic SettingPanel for selected node)
   const onSelectionChange = useCallback(
-    ({ nodes }: OnSelectionChangeParams) => {
+    ({ nodes, edges }: OnSelectionChangeParams) => {
       if (nodes && nodes.length > 0) {
         setSelectedNode(nodes[0]);
       } else {
         setSelectedNode(null);
       }
+      // Track selected elements to show the Delete button
+      setSelectedElements({ nodes, edges });
     },
-    [setSelectedNode]
+    [setSelectedNode, setSelectedElements]
   );
 
   // 8. Manual Save workflow (nodes & edges) to Convex
@@ -210,13 +224,22 @@ function AgentBuilder() {
             </Panel>
           )}
 
-          {/* Bottom Floating Save Button */}
-          <Panel position="bottom-center">
+          {/* Bottom Floating Actions */}
+          <Panel position="bottom-center" className="flex items-center gap-4">
             <Button
               onClick={saveNodesAndEdges}
               className="shadow-lg px-6 py-2 rounded-full cursor-pointer"
             >
               Save
+            </Button>
+
+            <Button
+              variant="destructive"
+              onClick={handleDeleteSelected}
+              className="bg-red-500 hover:bg-red-600 text-white shadow-lg px-6 py-2 rounded-full cursor-pointer flex items-center gap-2"
+            >
+              <Trash2 className="h-4 w-4" />
+              Delete Selected
             </Button>
           </Panel>
         </ReactFlow>

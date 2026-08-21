@@ -1,7 +1,6 @@
 import React from 'react'
 import { Handle, Position } from '@xyflow/react'
 import { ThumbsUp } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 
 function UserApprovalNode({ data }: { data?: any }) {
   return (
@@ -26,14 +25,9 @@ function UserApprovalNode({ data }: { data?: any }) {
 
       <div className="flex flex-col gap-2 max-w-35 mt-2">
         <div className="relative">
-          <Button
-            variant="outline"
-            size="sm"
-            disabled
-            className="w-full text-xs h-7 bg-gray-50 text-green-700 border-green-200"
-          >
+          <div className="w-full text-xs h-7 bg-gray-50 text-green-700 border border-green-200 rounded-md flex items-center justify-center opacity-70 select-none">
             Approve
-          </Button>
+          </div>
           <Handle
             id="approve"
             type="source"
@@ -44,14 +38,9 @@ function UserApprovalNode({ data }: { data?: any }) {
         </div>
 
         <div className="relative">
-          <Button
-            variant="outline"
-            size="sm"
-            disabled
-            className="w-full text-xs h-7 bg-gray-50 text-red-700 border-red-200"
-          >
+          <div className="w-full text-xs h-7 bg-gray-50 text-red-700 border border-red-200 rounded-md flex items-center justify-center opacity-70 select-none">
             Reject
-          </Button>
+          </div>
           <Handle
             id="reject"
             type="source"
@@ -65,4 +54,4 @@ function UserApprovalNode({ data }: { data?: any }) {
   )
 }
 
-export default UserApprovalNode
+export default UserApprovalNode

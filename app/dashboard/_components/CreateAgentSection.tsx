@@ -1,4 +1,4 @@
-'use cleint'
+'use client'
 import { Button } from '@/components/ui/button'
 import { Loader2Icon, Plus } from 'lucide-react'
 import React, { useContext, useState } from 'react'
@@ -30,7 +30,7 @@ function CreateAgentSection() {
     const CreateAgent = async () => {
         setloader(true);
         const agentId = uuidv4();
-        const result  = CreateAgentMutation({
+        const result  = await CreateAgentMutation({
             agentId : agentId,
             name: agentName??'',
             userId: userDetail?._id,
@@ -59,7 +59,7 @@ function CreateAgentSection() {
                         <DialogClose>
                             <Button variant={'ghost'}>Cancel</Button>
                         </DialogClose>
-                        <Button onClick={()=> CreateAgent} disabled = {loader}>
+                        <Button onClick={()=> CreateAgent()} disabled = {loader}>
                             {loader && <Loader2Icon className='animate-spin' />}
                             Create</Button>
                     </DialogFooter>
