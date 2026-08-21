@@ -4,6 +4,7 @@ import "./globals.css";
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import { ClerkProvider } from '@clerk/nextjs'
 import Provider from "./provider";
+import { Toaster } from "@/components/ui/toast";
 
 const outfit = Outfit({subsets:['latin']})
 
@@ -23,6 +24,7 @@ export default function RootLayout({ children }:Readonly<{children: React.ReactN
         <ConvexClientProvider>
           <Provider>
             {children}
+            <Toaster />
           </Provider>
         </ConvexClientProvider>
         </body>
