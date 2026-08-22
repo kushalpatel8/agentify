@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as Conversation from "../Conversation.js";
 import type * as agent from "../agent.js";
 import type * as user from "../user.js";
 
@@ -18,6 +19,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  Conversation: typeof Conversation;
   agent: typeof agent;
   user: typeof user;
 }>;

@@ -1,50 +1,69 @@
-"use client";
-import { UserDetailContext } from '@/context/UserDetailContext';
-import { WorkflowContext } from '@/context/WorkflowContext';
-import { api } from '@/convex/_generated/api';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useMutation } from 'convex/react';
-import React, { useEffect, useState } from 'react'
-import StartNode from './agent-builder/_customNodes/StartNode';
-import { ReactFlowProvider } from '@xyflow/react';
+import { api } from '@/convex/_generated/api';
+import { UserDetailContext } from '@/context/UserDetailContext';
+import { WorkflowContext } from '@/context/WorkflowContext';
+import { Node, Edge } from '@xyflow/react';
 
-const Provider = ({ children }:Readonly<{children: React.ReactNode}>) => {
+function Provider({ children }: { children: React.ReactNode }) {
+  const { user } = useUser();
+  const [userDetail, setUserDetail] = useState<any>(null);
 
-    const {user} = useUser();
-    const CreateUser = useMutation(api.user.CreateNewUser);
-    const [userDetail, setUserDetail] = useState<any>();
-    const [selectedNode, setSelectedNode] = useState<any>();
-    const [addedNodes, setAddedNodes] = useState([{
-        id: 'start',
-        position: {x:0, y:0},
-        data:{label: 'Start'},
-        type: 'StartNode'
-    }]); 
-    const [nodeEdges, setNodeEdges] = useState([]);
+  // Workflow Context States (Canvas Nodes, Edges & Active Selection)
+  const [addedNodes, setAddedNodes] = useState<Node[]>([
+    {
+      id: 'start',
+      position: { x: 0, y: 0 },
+      data: { label: 'start' },
+      type: 'StartNode',
+    },
+  ]);
+  const [nodeEdges, setNodeEdges] = useState<Edge[]>([]);
+  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
 
-    useEffect(() => {
-        user && CreateAndGetUser();
-    },[user])
+  const createNewUser = useMutation(api.user.CreateNewUser);
 
-    const CreateAndGetUser = async () => {
-        if(user) {
-            const result = await CreateUser({
-                name:user.fullName??'',
-                email:user.primaryEmailAddress?.emailAddress??''
-            });
-            setUserDetail(result);
-        }
+  // Sync authenticated Clerk user with Convex userTable
+  useEffect(() => {
+    if (user) {
+      createAndGetUser();
     }
+  }, [user]);
 
-    return (
-        <UserDetailContext.Provider value={{userDetail, setUserDetail}}>
-            <ReactFlowProvider>
-                <WorkflowContext.Provider value={{addedNodes, setAddedNodes, nodeEdges, setNodeEdges, selectedNode, setSelectedNode}}>
-                    <div>{children}</div>
-                </WorkflowContext.Provider>
-            </ReactFlowProvider>
-        </UserDetailContext.Provider>
-    );
+  const createAndGetUser = async () => {
+    if (!user) return;
+
+    try {
+      const result = await createNewUser({
+        name: user.fullName || user.username || 'User',
+        email: user.primaryEmailAddress?.emailAddress || '',
+      });
+
+      setUserDetail(result);
+    } catch (error) {
+      console.error('Error creating or fetching user:', error);
+    }
+  };
+
+  return (
+    <UserDetailContext.Provider value={{ userDetail, setUserDetail }}>
+      <WorkflowContext.Provider
+        value={{
+          addedNodes,
+          setAddedNodes,
+          nodeEdges,
+          setNodeEdges,
+          selectedNode,
+          setSelectedNode,
+        }}
+      >
+        {children}
+      </WorkflowContext.Provider>
+    </UserDetailContext.Provider>
+  );
 }
 
 export default Provider;

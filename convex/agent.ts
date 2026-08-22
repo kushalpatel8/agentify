@@ -52,3 +52,37 @@ export const UpdateAgentDetail = mutation({
     return result;
   },
 });
+
+export const UpdateAgentToolConfig = mutation({
+  args: {
+    id: v.id("AgentTable"),
+    agentToolConfig: v.any(),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.id, {
+      agentToolConfig: args.agentToolConfig,
+    });
+  },
+})
+
+export const PublishAgent = mutation({
+  args: {
+    id: v.id("AgentTable"),
+    publish: v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.id, {
+      publish: args.publish,
+    });
+  },
+});
+
+export const DeleteAgent = mutation({
+  args: {
+    id: v.id("AgentTable"),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.delete(args.id);
+  },
+});
+

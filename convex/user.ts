@@ -19,15 +19,40 @@ export const CreateNewUser = mutation({
       const userData = {
         name: args.name,
         email: args?.email,
-        token:5000
+        token: 5000,
       };
 
-      const result = await ctx.db.insert("UserTable", userData);
-
-      return result;
+      const newId = await ctx.db.insert("UserTable", userData);
+      return await ctx.db.get(newId);
     }
 
     // User already exists
     return user[0];
   },
 });
+
+// Update the user's remaining token balance
+export const UpdateUserToken = mutation({
+  args: {
+    userId: v.id("UserTable"),
+    token: v.number(),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.userId, { token: args.token });
+  },
+});
+
+export const DecrementUserToken = mutation({
+  args: {
+    userId: v.id("UserTable"),
+    amount: v.number(),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db.get(args.userId);
+    if (!user) return 0;
+    const currentToken = user.token ?? 0;
+    const newToken = Math.max(0, currentToken - args.amount);
+    await ctx.db.patch(args.userId, { token: newToken });
+    return newToken;
+  },
+});

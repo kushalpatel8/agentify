@@ -4,6 +4,7 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import {
   ReactFlow,
+  ReactFlowProvider,
   applyNodeChanges,
   applyEdgeChanges,
   addEdge,
@@ -248,4 +249,12 @@ function AgentBuilder() {
   );
 }
 
-export default AgentBuilder;
+function AgentBuilderWithProvider() {
+  return (
+    <ReactFlowProvider>
+      <AgentBuilder />
+    </ReactFlowProvider>
+  );
+}
+
+export default AgentBuilderWithProvider;

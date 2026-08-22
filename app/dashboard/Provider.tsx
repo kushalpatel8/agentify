@@ -5,13 +5,15 @@ import AppHeader from './_components/AppHeader'
 
 function DashboardProvider({children}:any) {
   return (
-    <SidebarProvider>
-        <AppSidebar />
-        <div className='w-full'>
-            <AppHeader />
-            {children}
-        </div>
-    </SidebarProvider>
+    <div className='min-h-screen relative w-full flex bg-[#FAF7F2] text-stone-900'>
+      <SidebarProvider className="z-10">
+          <AppSidebar />
+          <div className='w-full'>
+              <AppHeader />
+              {children}
+          </div>
+      </SidebarProvider>
+    </div>
   )
 }
 

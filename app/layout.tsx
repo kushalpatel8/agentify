@@ -13,20 +13,24 @@ export const metadata: Metadata = {
   description: "The App where you build ai agents.",
 };
 
+import { ThemeProvider } from "@/components/ThemeProvider"
+
 export default function RootLayout({ children }:Readonly<{children: React.ReactNode}>) {
   return (
     <ClerkProvider>
     <html
-      lang="en">
+      lang="en" suppressHydrationWarning>
       <body 
       className={outfit.className}
       >
-        <ConvexClientProvider>
-          <Provider>
-            {children}
-            <Toaster />
-          </Provider>
-        </ConvexClientProvider>
+        <ThemeProvider attribute="class" defaultTheme="light" forcedTheme="light" disableTransitionOnChange>
+          <ConvexClientProvider>
+            <Provider>
+              {children}
+              <Toaster />
+            </Provider>
+          </ConvexClientProvider>
+        </ThemeProvider>
         </body>
     </html>
     </ClerkProvider>

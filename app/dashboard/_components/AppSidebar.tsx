@@ -29,22 +29,17 @@ const MenuOptions = [
     },
     {
         title: 'AI Agents',
-        url: '#',
+        url: '/dashboard/my-agents',
         icon: Headphones
     },
     {
-        title: 'Data',
-        url: '#',
-        icon: Database
-    },
-    {
         title: 'Pricing',
-        url: '#',
+        url: '/dashboard/pricing',
         icon: WalletCards
     },
     {
         title: 'Profile',
-        url: '#',
+        url: '/dashboard/profile',
         icon: User2Icon
     },
 ]
@@ -54,7 +49,7 @@ function AppSidebar() {
     const {userDetail, setUserDetails} = useContext(UserDetailContext);
     const path = usePathname();
   return (
-    <Sidebar collapsible='icon'>
+    <Sidebar collapsible='icon' className="border-r-stone-800">
       <SidebarHeader>
         <div className='flex gap-2 items-center'>
             <Image src = {'/logo.svg'} alt = 'logo' width = {35} height = {35}/>
@@ -63,12 +58,12 @@ function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-            <SidebarGroupLabel>Aplications</SidebarGroupLabel>
+            <SidebarGroupLabel className="text-stone-400 uppercase tracking-wider"></SidebarGroupLabel>
             <SidebarGroupContent>
                 <SidebarMenu>
                     {MenuOptions.map((menu, index) => (
                         <SidebarMenuItem key={index}>
-                            <SidebarMenuButton size={open ?'lg' : 'default'} isActive = {path == menu.url ? true : false}>
+                            <SidebarMenuButton size={open ?'lg' : 'default'} isActive={path == menu.url} className="text-amber-500 hover:bg-stone-800 hover:text-amber-400 data-[active=true]:bg-stone-800/50 data-[active=true]:text-amber-400">
                                 <Link href={menu.url} className="flex items-center gap-2 w-full">
                                     <menu.icon />
                                     <span>{menu.title}</span>
@@ -82,12 +77,20 @@ function AppSidebar() {
       </SidebarContent>
       <SidebarFooter className='mb-10'>
         <div className='flex gap-2 items-center'>
-            <Gem />
-            {open && <h2>Remaing Credits : 
-                <span className='font-bold'>{userDetail?.token}</span>
-            </h2>}
+            <Gem className={userDetail?.subscription ? 'text-yellow-400' : ''} />
+            {open && (
+              <h2>
+                {userDetail?.subscription ? (
+                  <span className='font-bold text-yellow-400'>Unlimited</span>
+                ) : (
+                  <>Remaining Credits : <span className='font-bold'>{userDetail?.token ?? 0}</span></>
+                )}
+              </h2>
+            )}
         </div>
-        {open && <Button>Upgrade to Unlimited</Button>}
+        {open && !userDetail?.subscription && (
+          <Link href='/dashboard/pricing'><Button className='w-full bg-amber-500 hover:bg-amber-600 text-stone-900 font-medium border-0'>Upgrade to Unlimited</Button></Link>
+        )}
       </SidebarFooter>
     </Sidebar>
   )
