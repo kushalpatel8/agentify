@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Agentify 🤖✨
 
-## Getting Started
+Agentify is a powerful, visual drag-and-drop platform for building and deploying autonomous AI agents in minutes. Connect AI models, logic flows, external REST APIs, and condition checks seamlessly using an intuitive node canvas.
 
-First, run the development server:
+## ✨ Features
 
+- **Visual Node Canvas**: Drag and drop agents, loops, webhooks, and conditionals using a dynamic React Flow interface.
+- **Autonomous Agents**: Native multi-agent coordination with the OpenAI Agent SDK and streaming token responses.
+- **Instant Deployment**: Publish live agents and integrate them into any frontend.
+- **Built-in Monetization & Limits**:
+  - Secure Authentication via **Clerk**.
+  - Advanced Rate Limiting and Token Buckets powered by **Arcjet** (e.g., 5,000 tokens auto-refilling every 5 days).
+  - Premium Subscriptions via **Stripe** to unlock unlimited agents.
+- **Stunning UI**: Custom "Warm Obsidian & Solar Gold" premium design aesthetic, built with Tailwind CSS and Shadcn UI.
+
+## 📸 Screenshots
+
+![Screenshot 1](./Screenshot1.png)
+![Screenshot 2](./Screenshot2.png)
+![Screenshot 3](./Screenshot3.png)
+
+## 🛠️ Tech Stack
+
+- **Framework**: [Next.js](https://nextjs.org) (App Router)
+- **Backend & Database**: [Convex](https://convex.dev/) (Real-time backend as a service)
+- **Authentication**: [Clerk](https://clerk.com/)
+- **Rate Limiting**: [Arcjet](https://arcjet.com/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com) + [Shadcn UI](https://ui.shadcn.com/)
+- **Flow Engine**: [React Flow](https://reactflow.dev/)
+- **AI Integration**: OpenAI SDK
+
+## 🚀 Getting Started
+
+### Prerequisites
+Make sure you have Node.js and npm (or pnpm/yarn/bun) installed. You will also need active API keys for Clerk, Convex, Arcjet, and OpenAI.
+
+### 1. Clone the repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/your-username/agentify.git
+cd agentify
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install Dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Environment Variables
+Create a `.env.local` file in the root directory and add the following variables:
+```env
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_key
+CLERK_SECRET_KEY=your_clerk_secret
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+CONVEX_DEPLOYMENT=your_convex_deployment
+NEXT_PUBLIC_CONVEX_URL=your_convex_url
 
-## Learn More
+ARCJET_KEY=your_arcjet_key
+OPENAI_API_KEY=your_openai_key
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 4. Start the Development Server
+Run the Next.js frontend and Convex backend simultaneously:
+```bash
+npm run dev
+# In a separate terminal run: npx convex dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the app.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🎨 Design System
 
-## Deploy on Vercel
+Agentify uses a highly curated design system called **Warm Obsidian & Solar Gold**:
+- **App Canvas**: Warm Sand (`#FAF7F2`)
+- **Sidebar**: Obsidian Gold (`#1C1917`)
+- **Primary Accents**: Solar Gold (`#F59E0B`)
+- **Typography**: Deep Espresso (`#18181B`) and Warm Umber (`#78716C`)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📄 License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is licensed under the MIT License.
