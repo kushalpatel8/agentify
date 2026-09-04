@@ -19,6 +19,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from 'next/navigation'
 import { UserDetailContext } from '@/context/UserDetailContext'
 import { toast } from 'sonner'
+import { useAuth } from '@clerk/nextjs'
+import { useSubscription } from '@clerk/nextjs/experimental'
 
 const FREE_AGENT_LIMIT = 2;
 
@@ -177,7 +179,25 @@ function CreateAgentSection() {
         userDetail?._id ? { userId: userDetail._id } : 'skip'
     );
 
-    const isSubscribed = !!userDetail?.subscription;
+    const { has } = useAuth();
+    const { data: subscription } = useSubscription();
+
+    const isSubscribed = Boolean(
+      userDetail?.subscription ||
+      subscription?.subscriptionItems?.some((item: any) => {
+        const name = (item.plan?.name || item.plan?.slug || item.plan?.key || '').toLowerCase();
+        return (item.status === 'active' || item.status === 'trialing') && name !== 'free' && name !== '';
+      }) ||
+      ((subscription && ((subscription.status as string) === 'active' || (subscription.status as string) === 'trialing')) &&
+        subscription?.subscriptionItems?.some((item: any) => (item.plan?.name || '').toLowerCase() !== 'free')) ||
+      (has && (
+        has({ plan: 'Unlimited_plan' }) ||
+        has({ plan: 'unlimited_plan' }) ||
+        has({ plan: 'unlimited' }) ||
+        has({ plan: 'user:Unlimited_plan' }) ||
+        has({ plan: 'user:unlimited_plan' })
+      ))
+    );
     const isAgentListLoading = agentList === undefined;
     const tokenCount = userDetail?.token ?? 0;
     const agentsRemaining = Math.max(0, Math.floor(tokenCount / 2500));

@@ -24,8 +24,11 @@ export async function POST(req: Request) {
 
     const convexUserId = userId as Id<"UserTable">;
 
+    const userRecord = await convex.query(api.user.GetUserById, { userId: convexUserId });
+    const userIsSubscribed = isSubscribed || Boolean(userRecord?.subscription);
+
     // --- Subscribed users: skip Arcjet entirely ---
-    if (isSubscribed) {
+    if (userIsSubscribed) {
       await convex.mutation(api.agent.CreateAgent, {
         agentId,
         name,

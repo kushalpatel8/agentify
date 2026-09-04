@@ -1,10 +1,11 @@
 import { v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 
 export const CreateNewUser = mutation({
   args: {
     name: v.string(),
     email: v.string(),
+    subscription: v.optional(v.string()),
   },
 
   handler: async (ctx, args) => {
@@ -20,14 +21,54 @@ export const CreateNewUser = mutation({
         name: args.name,
         email: args?.email,
         token: 5000,
+        subscription: args.subscription,
       };
 
       const newId = await ctx.db.insert("UserTable", userData);
       return await ctx.db.get(newId);
     }
 
-    // User already exists
+    // User already exists - sync subscription if updated
+    if (args.subscription !== undefined && user[0].subscription !== args.subscription) {
+      await ctx.db.patch(user[0]._id, { subscription: args.subscription });
+      return await ctx.db.get(user[0]._id);
+    }
+
     return user[0];
+  },
+});
+
+// Update the user's subscription status/plan
+export const UpdateUserSubscription = mutation({
+  args: {
+    userId: v.id("UserTable"),
+    subscription: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.userId, { subscription: args.subscription });
+    return await ctx.db.get(args.userId);
+  },
+});
+
+export const GetUserById = query({
+  args: {
+    userId: v.id("UserTable"),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db.get(args.userId);
+  },
+});
+
+export const GetUserByEmail = query({
+  args: {
+    email: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("UserTable")
+      .filter((q) => q.eq(q.field("email"), args.email))
+      .collect();
+    return user[0] ?? null;
   },
 });
 
